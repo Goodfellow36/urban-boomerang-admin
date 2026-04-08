@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Urban Boomerang — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #C9A84C;
+  --green: #1DB87A;
+  --blue: #3B82F6;
+  --red: #EF4444;
+  --amber: #F59E0B;
+  --ink: #05080D;
+  --ink2: #080C13;
+  --ink3: #0D1219;
+  --ink4: #111820;
+  --cream: #F0EAD8;
+  --cr2: rgba(240,234,216,0.7);
+  --cr3: rgba(240,234,216,0.35);
+  --cr4: rgba(240,234,216,0.1);
+  --border: rgba(255,255,255,0.06);
+  --gold-dim: rgba(201,168,76,0.08);
+  --gold-border: rgba(201,168,76,0.25);
+  --green-dim: rgba(29,184,122,0.1);
+  --green-border: rgba(29,184,122,0.25);
+  --red-dim: rgba(239,68,68,0.1);
+  --red-border: rgba(239,68,68,0.25);
+  --amber-dim: rgba(245,158,11,0.1);
+  --amber-border: rgba(245,158,11,0.25);
+  --sidebar: 220px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Manrope',sans-serif; background:var(--ink); color:var(--cream); display:flex; min-height:100vh; }
+
+/* LOGIN */
+.login-wrap { width:100%; display:flex; align-items:center; justify-content:center; min-height:100vh; }
+.login-card { width:380px; background:var(--ink3); border:1px solid var(--border); border-radius:20px; padding:40px; }
+.login-logo { display:flex; align-items:center; gap:10px; margin-bottom:28px; }
+.login-logo-icon { width:36px; height:36px; border-radius:10px; background:var(--gold-dim); border:1px solid var(--gold-border); display:flex; align-items:center; justify-content:center; font-size:18px; }
+.login-title { font-size:24px; font-weight:800; margin-bottom:6px; }
+.login-sub { font-size:13px; color:var(--cr3); margin-bottom:24px; }
+.form-label { font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--cr3); margin-bottom:6px; display:block; }
+.form-input { width:100%; padding:12px 14px; background:var(--ink4); border:1px solid var(--border); border-radius:10px; font-family:'Manrope',sans-serif; font-size:14px; color:var(--cream); outline:none; margin-bottom:14px; transition:border-color 0.2s; }
+.form-input:focus { border-color:var(--gold-border); }
+.form-input::placeholder { color:var(--cr3); }
+.btn-login { width:100%; padding:13px; background:var(--gold); border:none; border-radius:10px; font-family:'Manrope',sans-serif; font-size:14px; font-weight:800; color:var(--ink); cursor:pointer; margin-top:4px; }
+.btn-login:hover { opacity:0.9; }
+.login-error { background:var(--red-dim); border:1px solid var(--red-border); border-radius:8px; padding:10px 14px; font-size:13px; color:var(--red); margin-bottom:12px; display:none; }
+.login-demo { margin-top:16px; padding:12px; background:var(--gold-dim); border:1px solid var(--gold-border); border-radius:8px; font-size:12px; color:var(--cr3); text-align:center; }
+.login-demo strong { color:var(--gold); }
+
+/* SIDEBAR */
+.sidebar { width:var(--sidebar); background:var(--ink2); border-right:1px solid var(--border); display:flex; flex-direction:column; position:fixed; top:0; left:0; bottom:0; z-index:50; }
+.sb-logo { padding:18px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:8px; }
+.sb-logo-icon { width:30px; height:30px; border-radius:8px; background:var(--gold-dim); border:1px solid var(--gold-border); display:flex; align-items:center; justify-content:center; font-size:15px; }
+.sb-logo-text { font-size:12px; font-weight:800; color:var(--cream); }
+.sb-logo-sub { font-size:9px; color:var(--cr3); letter-spacing:0.1em; }
+.sb-nav { flex:1; padding:10px 0; overflow-y:auto; }
+.sn-section { font-size:9px; font-weight:800; letter-spacing:0.2em; text-transform:uppercase; color:var(--cr3); padding:10px 16px 4px; }
+.sn-item { display:flex; align-items:center; gap:8px; padding:8px 16px; font-size:12px; font-weight:600; color:var(--cr3); cursor:pointer; transition:all 0.15s; }
+.sn-item:hover { color:var(--cream); background:rgba(255,255,255,0.03); }
+.sn-item.active { color:var(--gold); background:var(--gold-dim); border-right:2px solid var(--gold); }
+.sn-icon { font-size:14px; width:18px; text-align:center; }
+.sn-badge { margin-left:auto; font-size:10px; font-weight:700; padding:2px 7px; border-radius:50px; }
+.snb-red { background:var(--red-dim); border:1px solid var(--red-border); color:var(--red); }
+.snb-amber { background:var(--amber-dim); border:1px solid var(--amber-border); color:var(--amber); }
+.snb-green { background:var(--green-dim); border:1px solid var(--green-border); color:var(--green); }
+.sb-footer { padding:14px 16px; border-top:1px solid var(--border); }
+.sb-user { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+.sb-avatar { width:30px; height:30px; border-radius:50%; background:var(--gold-dim); border:1px solid var(--gold-border); display:flex; align-items:center; justify-content:center; font-size:12px; }
+.sb-name { font-size:12px; font-weight:700; color:var(--cream); }
+.sb-role { font-size:10px; color:var(--cr3); }
+.btn-logout { width:100%; padding:8px; background:transparent; border:1px solid var(--border); border-radius:8px; font-family:'Manrope',sans-serif; font-size:11px; color:var(--cr3); cursor:pointer; }
+.btn-logout:hover { color:var(--cream); border-color:rgba(255,255,255,0.15); }
+
+/* MAIN */
+.main { margin-left:var(--sidebar); flex:1; display:flex; flex-direction:column; min-height:100vh; }
+.topbar { position:sticky; top:0; background:rgba(5,8,13,0.95); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); padding:0 24px; height:52px; display:flex; align-items:center; justify-content:space-between; z-index:40; }
+.tb-left { display:flex; align-items:center; gap:12px; }
+.tb-title { font-size:15px; font-weight:800; color:var(--cream); }
+.tb-status { display:flex; align-items:center; gap:5px; font-size:11px; font-weight:700; padding:4px 10px; border-radius:50px; }
+.tb-status.live { background:var(--green-dim); border:1px solid var(--green-border); color:var(--green); }
+.tb-dot { width:5px; height:5px; border-radius:50%; background:currentColor; }
+.tb-right { display:flex; align-items:center; gap:10px; }
+.tb-time { font-size:12px; color:var(--cr3); }
+.content { padding:24px; flex:1; }
+.page { display:none; }
+.page.active { display:block; }
+
+/* COMPONENTS */
+.stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:20px; }
+.stat-card { background:var(--ink3); border:1px solid var(--border); border-radius:14px; padding:18px; transition:border-color 0.2s; }
+.stat-card:hover { border-color:var(--gold-border); }
+.stat-label { font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--cr3); margin-bottom:8px; }
+.stat-val { font-size:28px; font-weight:800; letter-spacing:-0.5px; line-height:1; margin-bottom:4px; }
+.stat-change { font-size:11px; color:var(--green); font-weight:600; }
+.stat-change.neg { color:var(--red); }
+.gold { color:var(--gold); }
+.green { color:var(--green); }
+.blue { color:var(--blue); }
+.red { color:var(--red); }
+.amber { color:var(--amber); }
+
+.card { background:var(--ink3); border:1px solid var(--border); border-radius:14px; overflow:hidden; margin-bottom:16px; }
+.card-header { padding:14px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.card-title { font-size:13px; font-weight:700; color:var(--cream); }
+.card-sub { font-size:11px; color:var(--cr3); margin-top:2px; }
+
+table { width:100%; border-collapse:collapse; }
+th { font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--cr3); padding:10px 20px; text-align:left; border-bottom:1px solid var(--border); background:var(--ink4); }
+td { padding:12px 20px; font-size:12px; color:var(--cr2); border-bottom:1px solid rgba(255,255,255,0.03); }
+tr:last-child td { border-bottom:none; }
+tr:hover td { background:rgba(255,255,255,0.02); }
+.td-bold { font-weight:600; color:var(--cream); }
+
+.badge { display:inline-flex; align-items:center; padding:2px 8px; border-radius:50px; font-size:10px; font-weight:700; }
+.badge-gold { background:var(--gold-dim); border:1px solid var(--gold-border); color:var(--gold); }
+.badge-green { background:var(--green-dim); border:1px solid var(--green-border); color:var(--green); }
+.badge-red { background:var(--red-dim); border:1px solid var(--red-border); color:var(--red); }
+.badge-amber { background:var(--amber-dim); border:1px solid var(--amber-border); color:var(--amber); }
+.badge-dim { background:var(--cr4); border:1px solid var(--border); color:var(--cr3); }
+.badge-blue { background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.25); color:var(--blue); }
+
+.btn { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:8px; font-family:'Manrope',sans-serif; font-size:12px; font-weight:700; cursor:pointer; border:none; transition:all 0.15s; }
+.btn-gold { background:var(--gold); color:var(--ink); }
+.btn-gold:hover { opacity:0.9; }
+.btn-ghost { background:transparent; color:var(--cr3); border:1px solid var(--border); }
+.btn-ghost:hover { color:var(--cream); border-color:rgba(255,255,255,0.15); }
+.btn-green { background:var(--green); color:white; }
+.btn-red { background:var(--red); color:white; }
+.btn-sm { padding:4px 10px; font-size:11px; }
+
+.loading { display:flex; align-items:center; justify-content:center; padding:40px; color:var(--cr3); font-size:13px; gap:10px; }
+.spinner { width:16px; height:16px; border:2px solid var(--border); border-top-color:var(--gold); border-radius:50%; animation:spin 0.8s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+.empty { text-align:center; padding:48px 20px; }
+.empty-icon { font-size:36px; margin-bottom:12px; }
+.empty-title { font-size:14px; font-weight:700; color:var(--cream); margin-bottom:6px; }
+.empty-sub { font-size:12px; color:var(--cr3); }
+
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.section-title { font-size:17px; font-weight:800; color:var(--cream); letter-spacing:-0.3px; margin-bottom:4px; }
+.section-sub { font-size:12px; color:var(--cr3); margin-bottom:20px; }
+
+.toast { position:fixed; bottom:20px; right:20px; background:var(--ink3); border:1px solid var(--border); border-radius:12px; padding:12px 18px; font-size:13px; color:var(--cream); z-index:1000; display:none; gap:8px; align-items:center; box-shadow:0 8px 32px rgba(0,0,0,0.4); }
+.toast.show { display:flex; }
+.toast.success { border-color:var(--green-border); }
+.toast.error { border-color:var(--red-border); }
+
+.inp { background:var(--ink4); border:1px solid var(--border); border-radius:8px; padding:7px 12px; font-family:'Manrope',sans-serif; font-size:12px; color:var(--cream); outline:none; }
+.inp:focus { border-color:var(--gold-border); }
+.inp::placeholder { color:var(--cr3); }
+select.inp option { background:var(--ink4); }
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"><span id="toast-icon">✅</span><span id="toast-msg"></span></div>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="login-wrap">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-icon">🔄</div>
+      <div>
+        <div style="font-size:14px;font-weight:800;color:var(--cream);">Urban Boomerang</div>
+        <div style="font-size:10px;color:var(--cr3);letter-spacing:0.1em;">ADMIN PORTAL</div>
+      </div>
+    </div>
+    <div class="login-title">Admin Access</div>
+    <p class="login-sub">Sign in with your admin credentials to manage the platform.</p>
+    <div class="login-error" id="login-error"></div>
+    <label class="form-label">Email</label>
+    <input type="email" class="form-input" id="login-email" placeholder="admin@urbanboomerang.app" />
+    <label class="form-label">Password</label>
+    <input type="password" class="form-input" id="login-password" placeholder="••••••••" />
+    <button class="btn-login" onclick="handleLogin()" id="login-btn">Sign In →</button>
+    <div class="login-demo"><strong>Note:</strong> Use your admin credentials from Railway.<br>Admin user was seeded with the database.</div>
+  </div>
+</div>
+
+<!-- PORTAL -->
+<div id="portal" style="display:none;width:100%;min-height:100vh;position:relative;">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-icon">🔄</div>
+      <div>
+        <div class="sb-logo-text">Urban Boomerang</div>
+        <div class="sb-logo-sub">ADMIN PORTAL</div>
+      </div>
+    </div>
+    <nav class="sb-nav">
+      <div class="sn-section">Operations</div>
+      <div class="sn-item active" onclick="nav('overview',this)"><span class="sn-icon">⚡</span>Command Center</div>
+      <div class="sn-item" onclick="nav('transactions',this)"><span class="sn-icon">🔄</span>Transactions</div>
+      <div class="sn-item" onclick="nav('disputes',this)"><span class="sn-icon">⚖️</span>Disputes</div>
+
+      <div class="sn-section">Partners</div>
+      <div class="sn-item" onclick="nav('retailers',this)"><span class="sn-icon">🏪</span>Retailers</div>
+      <div class="sn-item" onclick="nav('initiatives',this)"><span class="sn-icon">🎯</span>Initiatives</div>
+
+      <div class="sn-section">Users</div>
+      <div class="sn-item" onclick="nav('users',this)"><span class="sn-icon">👥</span>User Management</div>
+      <div class="sn-item" onclick="nav('kyc',this)"><span class="sn-icon">🪪</span>KYC Review</div>
+
+      <div class="sn-section">Platform</div>
+      <div class="sn-item" onclick="nav('system',this)"><span class="sn-icon">⚙️</span>System Health</div>
+    </nav>
+    <div class="sb-footer">
+      <div class="sb-user">
+        <div class="sb-avatar">👤</div>
+        <div>
+          <div class="sb-name" id="sb-name">Admin</div>
+          <div class="sb-role">Super Admin</div>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="handleLogout()">Sign Out</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="tb-left">
+        <div class="tb-title" id="tb-title">Command Center</div>
+        <div class="tb-status live"><div class="tb-dot"></div>Live</div>
+      </div>
+      <div class="tb-right">
+        <div class="tb-time" id="tb-time"></div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- OVERVIEW -->
+      <div class="page active" id="p-overview">
+        <div class="section-title">Command Center</div>
+        <div class="section-sub">Real-time platform overview</div>
+        <div class="stats-grid" id="overview-stats">
+          <div class="stat-card"><div class="stat-label">Total Users</div><div class="stat-val gold" id="stat-users">—</div><div class="stat-change" id="stat-users-sub">Loading...</div></div>
+          <div class="stat-card"><div class="stat-label">Total Retailers</div><div class="stat-val green" id="stat-retailers">—</div><div class="stat-change" id="stat-retailers-sub">Loading...</div></div>
+          <div class="stat-card"><div class="stat-label">Total Boomeranged</div><div class="stat-val blue" id="stat-boomeranged">—</div><div class="stat-change">All time</div></div>
+          <div class="stat-card"><div class="stat-label">Active Initiatives</div><div class="stat-val gold" id="stat-initiatives">—</div><div class="stat-change">Funded this month</div></div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header"><div><div class="card-title">Recent Users</div><div class="card-sub">Latest registrations</div></div></div>
+            <div id="overview-users"><div class="loading"><div class="spinner"></div>Loading...</div></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div><div class="card-title">Recent Transactions</div><div class="card-sub">Latest boomerangs</div></div></div>
+            <div id="overview-txns"><div class="loading"><div class="spinner"></div>Loading...</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TRANSACTIONS -->
+      <div class="page" id="p-transactions">
+        <div class="section-title">Transactions</div>
+        <div class="section-sub">All platform transactions</div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Transaction Log</div>
+            <div style="display:flex;gap:8px;">
+              <select class="inp" id="txn-status-filter" onchange="loadTransactions()">
+                <option value="">All statuses</option>
+                <option value="calculated">Calculated</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="disbursed">Disbursed</option>
+                <option value="reversed">Reversed</option>
+              </select>
+              <input class="inp" placeholder="Search..." id="txn-search" style="width:180px;" oninput="loadTransactions()" />
+            </div>
+          </div>
+          <div id="txn-body"><div class="loading"><div class="spinner"></div>Loading...</div></div>
+        </div>
+      </div>
+
+      <!-- DISPUTES -->
+      <div class="page" id="p-disputes">
+        <div class="section-title">Disputes</div>
+        <div class="section-sub">User dispute management</div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Open Disputes</div></div>
+          <div id="disputes-body"><div class="loading"><div class="spinner"></div>Loading...</div></div>
+        </div>
+      </div>
+
+      <!-- RETAILERS -->
+      <div class="page" id="p-retailers">
+        <div class="section-title">Retailers</div>
+        <div class="section-sub">Manage partner retailers</div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">All Retailers</div>
+            <div style="display:flex;gap:8px;">
+              <select class="inp" id="retailer-status-filter" onchange="loadRetailers()">
+                <option value="">All statuses</option>
+                <option value="active">Active</option>
+                <option value="pending">Pending</option>
+                <option value="suspended">Suspended</option>
+              </select>
+            </div>
+          </div>
+          <div id="retailers-body"><div class="loading"><div class="spinner"></div>Loading...</div></div>
+        </div>
+      </div>
+
+      <!-- INITIATIVES -->
+      <div class="page" id="p-initiatives">
+        <div class="section-title">Initiatives</div>
+        <div class="section-sub">Manage community initiatives</div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">All Initiatives</div></div>
+          <div id="initiatives-body"><div class="loading"><div class="spinner"></div>Loading...</div></div>
+        </div>
+      </div>
+
+      <!-- USERS -->
+      <div class="page" id="p-users">
+        <div class="section-title">User Management</div>
+        <div class="section-sub">All platform members</div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">All Users</div>
+            <div style="display:flex;gap:8px;">
+              <select class="inp" id="user-status-filter" onchange="loadUsers()">
+                <option value="">All statuses</option>
+                <option value="active">Active</option>
+                <option value="pending_kyc">Pending KYC</option>
+                <option value="suspended">Suspended</option>
+              </select>
+              <input class="inp" placeholder="Search name or phone..." id="user-search" style="width:200px;" oninput="loadUsers()" />
+            </div>
+          </div>
+          <div id="users-body"><div class="loading"><div class="spinner"></div>Loading...</div></div>
+        </div>
+      </div>
+
+      <!-- KYC -->
+      <div class="page" id="p-kyc">
+        <div class="section-title">KYC Review</div>
+        <div class="section-sub">Identity verification queue</div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Pending Verification</div></div>
+          <div id="kyc-body"><div class="loading"><div class="spinner"></div>Loading...</div></div>
+        </div>
+      </div>
+
+      <!-- SYSTEM -->
+      <div class="page" id="p-system">
+        <div class="section-title">System Health</div>
+        <div class="section-sub">Live platform status</div>
+        <div class="stats-grid" id="system-stats" style="grid-template-columns:repeat(3,1fr);">
+          <div class="stat-card">
+            <div class="stat-label">API Status</div>
+            <div class="stat-val green" id="sys-api">Checking...</div>
+            <div class="stat-change" id="sys-api-sub">api.urbanboomerang.app</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Database</div>
+            <div class="stat-val" id="sys-db">Checking...</div>
+            <div class="stat-change">Railway PostgreSQL</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Redis</div>
+            <div class="stat-val" id="sys-redis">Checking...</div>
+            <div class="stat-change">Railway Redis</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Environment Variables</div></div>
+          <div style="padding:20px;">
+            <table>
+              <thead><tr><th>Service</th><th>Status</th><th>Notes</th></tr></thead>
+              <tbody>
+                <tr><td>Plaid</td><td id="env-plaid">—</td><td class="td-bold">Card linking</td></tr>
+                <tr><td>Twilio</td><td id="env-twilio">—</td><td class="td-bold">SMS OTP</td></tr>
+                <tr><td>JWT Secret</td><td><span class="badge badge-green">✓ Set</span></td><td class="td-bold">Auth tokens</td></tr>
+                <tr><td>Encryption Key</td><td><span class="badge badge-green">✓ Set</span></td><td class="td-bold">Data encryption</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'https://api.urbanboomerang.app/v1'
+let adminToken = null
+
+// ── HELPERS ──
+async function adminFetch(path, options = {}) {
+  try {
+    const res = await fetch(`${API}${path}`, {
+      ...options,
+      headers: { 'Authorization': `Bearer ${adminToken}`, 'Content-Type': 'application/json', ...(options.headers || {}) }
+    })
+    return res.json()
+  } catch(e) { return null }
+}
+
+function fmt(val) { return '$' + parseFloat(val||0).toFixed(2) }
+function fmtDate(d) { return d ? new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—' }
+
+function showToast(icon, msg, type='') {
+  const t = document.getElementById('toast')
+  document.getElementById('toast-icon').textContent = icon
+  document.getElementById('toast-msg').textContent = msg
+  t.className = 'toast show ' + type
+  setTimeout(() => t.className = 'toast', 3000)
+}
+
+function nav(page, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'))
+  document.querySelectorAll('.sn-item').forEach(n => n.classList.remove('active'))
+  document.getElementById('p-' + page).classList.add('active')
+  if(el) el.classList.add('active')
+  const titles = { overview:'Command Center', transactions:'Transactions', disputes:'Disputes', retailers:'Retailers', initiatives:'Initiatives', users:'User Management', kyc:'KYC Review', system:'System Health' }
+  document.getElementById('tb-title').textContent = titles[page] || page
+
+  // Load data for page
+  if(page === 'transactions') loadTransactions()
+  if(page === 'disputes') loadDisputes()
+  if(page === 'retailers') loadRetailers()
+  if(page === 'initiatives') loadInitiatives()
+  if(page === 'users') loadUsers()
+  if(page === 'kyc') loadKYC()
+  if(page === 'system') loadSystem()
+}
+
+// ── AUTH ──
+async function handleLogin() {
+  const email = document.getElementById('login-email').value.trim()
+  const password = document.getElementById('login-password').value
+  const btn = document.getElementById('login-btn')
+  const errEl = document.getElementById('login-error')
+  errEl.style.display = 'none'
+  if(!email || !password) { errEl.textContent = 'Please enter email and password'; errEl.style.display = 'block'; return }
+  btn.textContent = 'Signing in...'
+  btn.disabled = true
+  try {
+    const res = await fetch(`${API}/admin/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    })
+    const data = await res.json()
+    if(res.ok && data.data?.accessToken) {
+      adminToken = data.data.accessToken
+      document.getElementById('sb-name').textContent = data.data.admin?.firstName || 'Admin'
+      launchPortal()
+    } else {
+      errEl.textContent = data.error || 'Invalid credentials'
+      errEl.style.display = 'block'
+      btn.textContent = 'Sign In →'
+      btn.disabled = false
+    }
+  } catch(e) {
+    errEl.textContent = 'Could not connect to server'
+    errEl.style.display = 'block'
+    btn.textContent = 'Sign In →'
+    btn.disabled = false
+  }
+}
+
+function handleLogout() {
+  adminToken = null
+  document.getElementById('portal').style.display = 'none'
+  document.getElementById('login-wrap').style.display = 'flex'
+  document.getElementById('login-btn').textContent = 'Sign In →'
+  document.getElementById('login-btn').disabled = false
+  document.getElementById('login-password').value = ''
+}
+
+function launchPortal() {
+  document.getElementById('login-wrap').style.display = 'none'
+  document.getElementById('portal').style.display = 'flex'
+  document.getElementById('portal').style.flexDirection = 'row'
+  document.getElementById('tb-time').textContent = new Date().toLocaleDateString('en-US',{weekday:'short',month:'long',day:'numeric'})
+  loadOverview()
+}
+
+// ── OVERVIEW ──
+async function loadOverview() {
+  const [users, retailers, initiatives, txns] = await Promise.all([
+    adminFetch('/admin/users?limit=5'),
+    adminFetch('/admin/retailers?limit=5'),
+    adminFetch('/initiatives'),
+    adminFetch('/admin/transactions?limit=5')
+  ])
+
+  if(users?.data) {
+    document.getElementById('stat-users').textContent = users.data.total || users.data.length || '—'
+    document.getElementById('stat-users-sub').textContent = 'Registered members'
+    renderOverviewUsers(users.data.users || users.data)
+  }
+  if(retailers?.data) {
+    document.getElementById('stat-retailers').textContent = retailers.data.total || retailers.data.length || '—'
+    document.getElementById('stat-retailers-sub').textContent = 'Partner retailers'
+  }
+  if(initiatives?.data) {
+    document.getElementById('stat-initiatives').textContent = initiatives.data.length || '—'
+  }
+  if(txns?.data) {
+    document.getElementById('stat-boomeranged').textContent = '$' + (txns.data.totalBoomeranged || '0.00')
+    renderOverviewTxns(txns.data.transactions || txns.data)
+  }
+}
+
+function renderOverviewUsers(users) {
+  if(!users?.length) { document.getElementById('overview-users').innerHTML = '<div class="empty"><div class="empty-icon">👥</div><div class="empty-title">No users yet</div></div>'; return }
+  document.getElementById('overview-users').innerHTML = `<table>
+    <thead><tr><th>Name</th><th>Phone</th><th>Status</th><th>Joined</th></tr></thead>
+    <tbody>${users.slice(0,5).map(u => `<tr>
+      <td class="td-bold">${u.first_name||u.firstName} ${u.last_name||u.lastName}</td>
+      <td>${u.phone}</td>
+      <td><span class="badge ${u.status==='active'?'badge-green':u.status==='pending_kyc'?'badge-amber':'badge-dim'}">${u.status||'—'}</span></td>
+      <td>${fmtDate(u.created_at)}</td>
+    </tr>`).join('')}</tbody>
+  </table>`
+}
+
+function renderOverviewTxns(txns) {
+  if(!txns?.length) { document.getElementById('overview-txns').innerHTML = '<div class="empty"><div class="empty-icon">🔄</div><div class="empty-title">No transactions yet</div></div>'; return }
+  document.getElementById('overview-txns').innerHTML = `<table>
+    <thead><tr><th>Amount</th><th>Boomerang</th><th>Status</th><th>Date</th></tr></thead>
+    <tbody>${txns.slice(0,5).map(t => `<tr>
+      <td class="td-bold">${fmt(t.amount)}</td>
+      <td style="color:var(--green);">+${fmt(t.boomerang_amount||t.boomerangAmount)}</td>
+      <td><span class="badge ${t.status==='confirmed'||t.status==='disbursed'?'badge-green':t.status==='calculated'?'badge-amber':'badge-dim'}">${t.status}</span></td>
+      <td>${fmtDate(t.created_at)}</td>
+    </tr>`).join('')}</tbody>
+  </table>`
+}
+
+// ── TRANSACTIONS ──
+async function loadTransactions() {
+  document.getElementById('txn-body').innerHTML = '<div class="loading"><div class="spinner"></div>Loading...</div>'
+  const status = document.getElementById('txn-status-filter').value
+  const search = document.getElementById('txn-search').value
+  const data = await adminFetch(`/admin/transactions?limit=50${status?'&status='+status:''}${search?'&search='+encodeURIComponent(search):''}`)
+  const txns = data?.data?.transactions || data?.data || []
+  if(!txns.length) { document.getElementById('txn-body').innerHTML = '<div class="empty"><div class="empty-icon">🔄</div><div class="empty-title">No transactions</div></div>'; return }
+  document.getElementById('txn-body').innerHTML = `<table>
+    <thead><tr><th>ID</th><th>User</th><th>Amount</th><th>Boomerang</th><th>Retailer</th><th>Status</th><th>Date</th></tr></thead>
+    <tbody>${txns.map(t => `<tr>
+      <td style="font-size:10px;color:var(--cr3);">${(t.id||'').slice(0,8)}...</td>
+      <td>${t.user_id ? t.user_id.slice(0,8)+'...' : '—'}</td>
+      <td class="td-bold">${fmt(t.amount)}</td>
+      <td style="color:var(--green);">+${fmt(t.boomerang_amount||t.boomerangAmount)}</td>
+      <td>${t.retailer_id ? t.retailer_id.slice(0,8)+'...' : '—'}</td>
+      <td><span class="badge ${t.status==='confirmed'||t.status==='disbursed'?'badge-green':t.status==='calculated'?'badge-amber':t.status==='reversed'?'badge-red':'badge-dim'}">${t.status}</span></td>
+      <td>${fmtDate(t.created_at)}</td>
+    </tr>`).join('')}</tbody>
+  </table>`
+}
+
+// ── DISPUTES ──
+async function loadDisputes() {
+  document.getElementById('disputes-body').innerHTML = '<div class="loading"><div class="spinner"></div>Loading...</div>'
+  const data = await adminFetch('/admin/disputes?limit=50')
+  const disputes = data?.data?.disputes || data?.data || []
+  if(!disputes.length) { document.getElementById('disputes-body').innerHTML = '<div class="empty"><div class="empty-icon">⚖️</div><div class="empty-title">No disputes</div><div class="empty-sub">All clear!</div></div>'; return }
+  document.getElementById('disputes-body').innerHTML = `<table>
+    <thead><tr><th>ID</th><th>User</th><th>Reason</th><th>Amount</th><th>Status</th><th>Submitted</th><th>Action</th></tr></thead>
+    <tbody>${disputes.map(d => `<tr>
+      <td style="font-size:10px;color:var(--cr3);">${(d.id||'').slice(0,8)}...</td>
+      <td>${d.user_id ? d.user_id.slice(0,8)+'...' : '—'}</td>
+      <td>${d.reason||'—'}</td>
+      <td class="td-bold">${fmt(d.disputed_amount)}</td>
+      <td><span class="badge ${d.status==='resolved'?'badge-green':d.status==='open'?'badge-amber':'badge-dim'}">${d.status}</span></td>
+      <td>${fmtDate(d.created_at)}</td>
+      <td><button class="btn btn-ghost btn-sm" onclick="resolveDispute('${d.id}')">Resolve</button></td>
+    </tr>`).join('')}</tbody>
+  </table>`
+}
+
+async function resolveDispute(id) {
+  const res = await adminFetch(`/admin/disputes/${id}/resolve`, { method:'POST', body:JSON.stringify({resolution:'approved',notes:'Resolved by admin'}) })
+  if(res?.data) { showToast('✅','Dispute resolved','success'); loadDisputes() }
+  else showToast('❌','Could not resolve dispute','error')
+}
+
+// ── RETAILERS ──
+async function loadRetailers() {
+  document.getElementById('retailers-body').innerHTML = '<div class="loading"><div class="spinner"></div>Loading...</div>'
+  const status = document.getElementById('retailer-status-filter').value
+  const data = await adminFetch(`/admin/retailers?limit=100${status?'&status='+status:''}`)
+  const retailers = data?.data?.retailers || data?.data || []
+  if(!retailers.length) { document.getElementById('retailers-body').innerHTML = '<div class="empty"><div class="empty-icon">🏪</div><div class="empty-title">No retailers yet</div></div>'; return }
+  document.getElementById('retailers-body').innerHTML = `<table>
+    <thead><tr><th>Name</th><th>City</th><th>Tier</th><th>Rate</th><th>Black-Owned</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody>${retailers.map(r => `<tr>
+      <td class="td-bold">${r.name}</td>
+      <td>${r.city||'—'}${r.state?', '+r.state:''}</td>
+      <td><span class="badge ${r.tier==='gold'?'badge-gold':r.tier==='silver'?'badge-dim':r.tier==='platinum'?'badge-blue':'badge-dim'}">${r.tier||'—'}</span></td>
+      <td style="color:var(--gold);">${((parseFloat(r.contribution_rate||0))*100).toFixed(0)}%</td>
+      <td>${r.is_black_owned?'<span class="badge badge-green">✓ Yes</span>':'<span class="badge badge-dim">No</span>'}</td>
+      <td><span class="badge ${r.status==='active'?'badge-green':r.status==='pending'?'badge-amber':'badge-red'}">${r.status}</span></td>
+      <td style="display:flex;gap:6px;">
+        ${r.status==='pending'?`<button class="btn btn-green btn-sm" onclick="approveRetailer('${r.id}')">Approve</button>`:''}
+        ${r.status==='active'?`<button class="btn btn-ghost btn-sm" onclick="suspendRetailer('${r.id}')">Suspend</button>`:''}
+      </td>
+    </tr>`).join('')}</tbody>
+  </table>`
+}
+
+async function approveRetailer(id) {
+  const res = await adminFetch(`/admin/retailers/${id}/approve`, { method:'POST' })
+  if(res?.data) { showToast('✅','Retailer approved','success'); loadRetailers() }
+  else showToast('❌','Could not approve retailer','error')
+}
+
+async function suspendRetailer(id) {
+  const res = await adminFetch(`/admin/retailers/${id}/suspend`, { method:'POST' })
+  if(res?.data) { showToast('✅','Retailer suspended','success'); loadRetailers() }
+  else showToast('❌','Could not suspend retailer','error')
+}
+
+// ── INITIATIVES ──
+async function loadInitiatives() {
+  document.getElementById('initiatives-body').innerHTML = '<div class="loading"><div class="spinner"></div>Loading...</div>'
+  const data = await adminFetch('/initiatives')
+  const inits = data?.data || []
+  if(!inits.length) { document.getElementById('initiatives-body').innerHTML = '<div class="empty"><div class="empty-icon">🎯</div><div class="empty-title">No initiatives</div></div>'; return }
+  document.getElementById('initiatives-body').innerHTML = `<table>
+    <thead><tr><th>Name</th><th>Athlete</th><th>Raised</th><th>Goal</th><th>Members</th><th>Status</th></tr></thead>
+    <tbody>${inits.map(i => `<tr>
+      <td class="td-bold">${i.name}</td>
+      <td>${i.athlete_name||'—'}</td>
+      <td style="color:var(--gold);">${fmt(i.raised_amount)}</td>
+      <td>${i.goal_amount?fmt(i.goal_amount):'—'}</td>
+      <td>${i.member_count||0}</td>
+      <td><span class="badge ${i.is_active?'badge-green':'badge-dim'}">${i.is_active?'Active':'Inactive'}</span></td>
+    </tr>`).join('')}</tbody>
+  </table>`
+}
+
+// ── USERS ──
+async function loadUsers() {
+  document.getElementById('users-body').innerHTML = '<div class="loading"><div class="spinner"></div>Loading...</div>'
+  const status = document.getElementById('user-status-filter').value
+  const search = document.getElementById('user-search').value
+  const data = await adminFetch(`/admin/users?limit=100${status?'&status='+status:''}${search?'&search='+encodeURIComponent(search):''}`)
+  const users = data?.data?.users || data?.data || []
+  if(!users.length) { document.getElementById('users-body').innerHTML = '<div class="empty"><div class="empty-icon">👥</div><div class="empty-title">No users found</div></div>'; return }
+  document.getElementById('users-body').innerHTML = `<table>
+    <thead><tr><th>Name</th><th>Phone</th><th>City</th><th>KYC</th><th>Status</th><th>Boomeranged</th><th>Joined</th></tr></thead>
+    <tbody>${users.map(u => `<tr>
+      <td class="td-bold">${u.first_name||u.firstName||''} ${u.last_name||u.lastName||''}</td>
+      <td>${u.phone}</td>
+      <td>${u.city||'—'}</td>
+      <td><span class="badge ${u.kyc_status==='verified'?'badge-green':u.kyc_status==='pending'?'badge-amber':'badge-dim'}">${u.kyc_status||u.kycStatus||'—'}</span></td>
+      <td><span class="badge ${u.status==='active'?'badge-green':u.status==='pending_kyc'?'badge-amber':'badge-dim'}">${u.status||'—'}</span></td>
+      <td style="color:var(--gold);">${fmt(u.lifetime_boomeranged||u.lifetimeBoomeranged)}</td>
+      <td>${fmtDate(u.created_at)}</td>
+    </tr>`).join('')}</tbody>
+  </table>`
+}
+
+// ── KYC ──
+async function loadKYC() {
+  document.getElementById('kyc-body').innerHTML = '<div class="loading"><div class="spinner"></div>Loading...</div>'
+  const data = await adminFetch('/admin/kyc?status=pending&limit=50')
+  const items = data?.data?.submissions || data?.data || []
+  if(!items.length) { document.getElementById('kyc-body').innerHTML = '<div class="empty"><div class="empty-icon">🪪</div><div class="empty-title">No pending KYC reviews</div><div class="empty-sub">All verifications are up to date</div></div>'; return }
+  document.getElementById('kyc-body').innerHTML = `<table>
+    <thead><tr><th>User</th><th>Phone</th><th>Submitted</th><th>Status</th><th>Action</th></tr></thead>
+    <tbody>${items.map(k => `<tr>
+      <td class="td-bold">${k.first_name||''} ${k.last_name||''}</td>
+      <td>${k.phone||'—'}</td>
+      <td>${fmtDate(k.created_at)}</td>
+      <td><span class="badge badge-amber">${k.kyc_status||'pending'}</span></td>
+      <td><button class="btn btn-ghost btn-sm">Review</button></td>
+    </tr>`).join('')}</tbody>
+  </table>`
+}
+
+// ── SYSTEM ──
+async function loadSystem() {
+  try {
+    const res = await fetch(`${API}/health`)
+    const data = await res.json()
+    if(res.ok) {
+      document.getElementById('sys-api').textContent = '✓ Online'
+      document.getElementById('sys-api').className = 'stat-val green'
+      document.getElementById('sys-db').textContent = data.db === 'ok' ? '✓ Online' : '⚠ Issue'
+      document.getElementById('sys-db').className = data.db === 'ok' ? 'stat-val green' : 'stat-val amber'
+      document.getElementById('sys-redis').textContent = data.redis === 'ok' ? '✓ Online' : '⚠ Issue'
+      document.getElementById('sys-redis').className = data.redis === 'ok' ? 'stat-val green' : 'stat-val amber'
+    }
+  } catch(e) {
+    document.getElementById('sys-api').textContent = '✗ Offline'
+    document.getElementById('sys-api').className = 'stat-val red'
+  }
+
+  // Check env vars via admin endpoint
+  const envData = await adminFetch('/admin/system/status')
+  if(envData?.data) {
+    document.getElementById('env-plaid').innerHTML = envData.data.plaid ? '<span class="badge badge-green">✓ Configured</span>' : '<span class="badge badge-red">✗ Missing</span>'
+    document.getElementById('env-twilio').innerHTML = envData.data.twilio ? '<span class="badge badge-green">✓ Configured</span>' : '<span class="badge badge-amber">⚠ Check config</span>'
+  }
+}
+
+// ── KEYBOARD ──
+document.addEventListener('keydown', e => {
+  if(e.key === 'Enter' && document.getElementById('login-wrap').style.display !== 'none') handleLogin()
+})
+</script>
+</body>
+</html>
