@@ -521,7 +521,7 @@ function renderOverviewUsers(users) {
   document.getElementById('overview-users').innerHTML = `<table>
     <thead><tr><th>Name</th><th>Phone</th><th>Status</th><th>Joined</th></tr></thead>
     <tbody>${users.slice(0,5).map(u => `<tr>
-      <td class="td-bold">${u.first_name||u.firstName||u.name||"Unknown"} ${u.last_name||u.lastName||""}</td>
+      <td class="td-bold">${u.full_name||u.firstName||"Unknown"}</td>
       <td>${u.phone}</td>
       <td><span class="badge ${u.status==='active'?'badge-green':u.status==='pending_kyc'?'badge-amber':'badge-dim'}">${u.status||'—'}</span></td>
       <td>${fmtDate(u.created_at)}</td>
