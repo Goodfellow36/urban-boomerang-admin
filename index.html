@@ -454,8 +454,8 @@ async function handleLogin() {
       body: JSON.stringify({ email, password })
     })
     const data = await res.json()
-    if(res.ok && data.data?.accessToken) {
-      adminToken = data.data.accessToken
+    if(res.ok && data.data?.token) {
+      adminToken = data.data.token
       document.getElementById('sb-name').textContent = data.data.admin?.firstName || 'Admin'
       launchPortal()
     } else {
