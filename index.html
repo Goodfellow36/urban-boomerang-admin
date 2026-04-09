@@ -521,7 +521,7 @@ function renderOverviewUsers(users) {
   document.getElementById('overview-users').innerHTML = `<table>
     <thead><tr><th>Name</th><th>Phone</th><th>Status</th><th>Joined</th></tr></thead>
     <tbody>${users.slice(0,5).map(u => `<tr>
-      <td class="td-bold">${u.first_name||u.firstName} ${u.last_name||u.lastName}</td>
+      <td class="td-bold">${u.first_name||u.firstName||u.name} ${u.last_name||u.lastName}</td>
       <td>${u.phone}</td>
       <td><span class="badge ${u.status==='active'?'badge-green':u.status==='pending_kyc'?'badge-amber':'badge-dim'}">${u.status||'—'}</span></td>
       <td>${fmtDate(u.created_at)}</td>
@@ -656,7 +656,7 @@ async function loadUsers() {
   document.getElementById('users-body').innerHTML = `<table>
     <thead><tr><th>Name</th><th>Phone</th><th>City</th><th>KYC</th><th>Status</th><th>Boomeranged</th><th>Joined</th></tr></thead>
     <tbody>${users.map(u => `<tr>
-      <td class="td-bold">${u.first_name||u.firstName||''} ${u.last_name||u.lastName||''}</td>
+      <td class="td-bold">${u.first_name||u.firstName||u.name||''} ${u.last_name||u.lastName||''}</td>
       <td>${u.phone}</td>
       <td>${u.city||'—'}</td>
       <td><span class="badge ${u.kyc_status==='verified'?'badge-green':u.kyc_status==='pending'?'badge-amber':'badge-dim'}">${u.kyc_status||u.kycStatus||'—'}</span></td>
